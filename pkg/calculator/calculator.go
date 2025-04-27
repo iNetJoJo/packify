@@ -27,6 +27,7 @@ func OptimalCalculatePacks(itemsOrdered uint64, availablePackSizes []uint64) (Pa
 	// Threshold based on benchmark results
 	// Below this threshold, the original algorithm is faster and uses less memory
 	// Above this threshold, the optimized algorithm is dramatically better
+	// Tbh, this is a guess based on benchmarks
 	var threshold uint64 = 2500
 
 	// If we have many pack sizes, lower the threshold as DP becomes more expensive
