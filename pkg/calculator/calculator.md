@@ -77,11 +77,10 @@ flowchart TB
     Reconstruct --> Result["Result: 1×500 + 1×250 packs"]
 
     subgraph "Dynamic Programming Table (simplified)"
-        dp0["dp[0]=0"] --- dp250["dp[250]=250<br>using 1×250"] 
-        dp250 --- dp500["dp[500]=500<br>using 1×500"]
-        dp500 --- dp501["dp[501]=750<br>using dp[251]+250"]
+        dp0["dp[0]=0"] --- dp250["dp[250]=250\using 1×250"] 
+        dp250 --- dp500["dp[500]=500\nusing 1×500"]
+        dp500 --- dp501["dp[501]=750\nusing dp[251]+250"]
     end
-```
 
 ## Key Insights
 
