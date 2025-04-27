@@ -81,6 +81,7 @@ flowchart TB
         dp250 --- dp500["dp[500]=500\nusing 1×500"]
         dp500 --- dp501["dp[501]=750\nusing dp[251]+250"]
     end
+```
 
 ## Key Insights
 
