@@ -1,0 +1,21 @@
+{{ define "content" }}
+<div class="pack-sizes-content" xmlns:hx-on="http://www.w3.org/1999/xhtml">
+    <section class="pack-sizes-list">
+        <h3>Available Pack Sizes</h3>
+        <div id="pack-sizes-table" hx-get="/pack-sizes/partial" hx-trigger="load, packSizesChanged from:body" hx-swap="innerHTML"></div>
+    </section>
+
+    <section class="add-pack-size">
+        <h3>Add New Pack Size</h3>
+        <form hx-post="/api/pack-sizes" hx-target="#add-result" hx-swap="innerHTML" hx-trigger="submit"  onclick="this.addEventListener('htmx:afterRequest', function() { document.body.dispatchEvent(new Event('packSizesChanged')); })">
+
+            <div class="form-group">
+                <label for="size">Pack Size:</label>
+                <input type="number" id="size" name="size" min="1" required>
+            </div>
+            <button type="submit" class="btn">Add Pack Size</button>
+        </form>
+        <div id="add-result"></div>
+    </section>
+</div>
+{{ end }}

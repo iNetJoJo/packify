@@ -1,0 +1,29 @@
+{{ define "pack_sizes_table" }}
+<table class="pack-sizes-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Size</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range .PackSizes }}
+        <tr>
+            <td>{{ .ID }}</td>
+            <td>{{ .Size }}</td>
+            <td class="actions">
+                <button class="btn btn-sm btn-danger"
+                        hx-delete="api/pack-sizes/{{ .ID }}"
+                        hx-confirm="Are you sure you want to delete this pack size?"
+                        hx-swap="none"
+                        hx-trigger="click"
+                        onclick="this.addEventListener('htmx:afterRequest', function() { document.body.dispatchEvent(new Event('packSizesChanged')); })">
+                    Delete
+                </button>
+            </td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
+{{ end }}

@@ -1,0 +1,67 @@
+{{ define "content" }}
+<div class="home-content">
+    <section class="intro">
+        <h3>Welcome to Packify</h3>
+        <p>Packify helps you calculate the optimal packs to fulfill customer orders based on specific business rules:</p>
+        <ol>
+            <li>Only whole packs can be sent. Packs cannot be broken open.</li>
+            <li>Within the constraints of Rule 1, send out the least amount of items to fulfill the order.</li>
+            <li>Within the constraints of Rules 1 & 2, send out as few packs as possible to fulfill each order.</li>
+        </ol>
+        <p><em>Note: Rule #2 takes precedence over rule #3.</em></p>
+    </section>
+
+    <section class="quick-calculate">
+        <h3>Quick Calculate</h3>
+        <form hx-post="/calculate" hx-target="#calculation-result" hx-swap="innerHTML">
+            <div class="form-group">
+                <label for="itemsOrdered">Items Ordered:</label>
+                <!-- I added here validation of max uint64 of golang, just to max the system out-->
+                <input type="number" id="itemsOrdered" name="itemsOrdered" min="1" max="18446744073709551615" required>
+            </div>
+            <button type="submit" class="btn">Calculate Packs</button>
+        </form>
+        <div id="calculation-result"></div>
+    </section>
+
+    <section class="examples">
+        <h3>Examples</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Items ordered</th>
+                    <th>Correct number of packs</th>
+                    <th>Explanation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>1 x 250</td>
+                    <td>Smallest pack that can fulfill the order</td>
+                </tr>
+                <tr>
+                    <td>250</td>
+                    <td>1 x 250</td>
+                    <td>Exact match with a single pack</td>
+                </tr>
+                <tr>
+                    <td>251</td>
+                    <td>1 x 500</td>
+                    <td>Next pack size up (minimizes excess)</td>
+                </tr>
+                <tr>
+                    <td>501</td>
+                    <td>1 x 500, 1 x 250</td>
+                    <td>Combination that minimizes excess</td>
+                </tr>
+                <tr>
+                    <td>12001</td>
+                    <td>2 x 5000, 1 x 2000, 1 x 250</td>
+                    <td>Combination that minimizes excess</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+{{ end }}

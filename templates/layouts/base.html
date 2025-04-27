@@ -1,0 +1,37 @@
+{{ define "layouts/base.html" }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} - Packify</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <!-- HTMX for interactive UI -->
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="container">
+                <h1 class="logo">Packify</h1>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/pack-sizes">Manage Pack Sizes</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>{{ .Title }}</h2>
+        {{ template "content" . }}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Packify - Optimal Pack Calculator</p>
+        </div>
+    </footer>
+</body>
+</html>
+{{ end }}

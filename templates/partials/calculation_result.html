@@ -1,0 +1,31 @@
+{{ define "calculation_result" }}
+<div class="result-container">
+    <h3>Calculation Result</h3>
+    <div class="result-summary">
+        <p><strong>Items Ordered:</strong> {{ .ItemsOrdered }}</p>
+        <p><strong>Total Packs:</strong> {{ .Result.TotalPacks }}</p>
+        <p><strong>Total Items:</strong> {{ .Result.TotalItems }}</p>
+        <p><strong>Excess Items:</strong> {{ .Result.ExcessItems }}</p>
+    </div>
+
+    <h4>Pack Breakdown:</h4>
+    <table class="packs-table">
+        <thead>
+            <tr>
+                <th>Pack Size</th>
+                <th>Quantity</th>
+                <th>Total Items</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range .Result.Packs }}
+            <tr>
+                <td>{{ .Size }}</td>
+                <td>{{ .Count }}</td>
+                <td>{{ .Size }} × {{ .Count }} = {{ multiply .Size .Count }}</td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+</div>
+{{ end }}
