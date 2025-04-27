@@ -7,10 +7,10 @@ import (
 
 // PackResult represents the result of a pack calculation
 type PackResult struct {
-	PackCounts  map[uint64]uint64 // Map of pack size to count
-	TotalPacks  uint64            // Total number of packs
-	TotalItems  uint64            // Total number of items
-	ExcessItems uint64            // Number of excess items
+	PackCounts  map[int]int // Map of pack size to count
+	TotalPacks  int         // Total number of packs
+	TotalItems  int         // Total number of items
+	ExcessItems int         // Number of excess items
 }
 
 // String returns a string representation of the pack result
@@ -23,20 +23,24 @@ func (pr PackResult) String() string {
 // based on order size and pack sizes to ensure optimal memory usage and performance.
 // For small orders, it uses CalculatePacks (pure DP approach).
 // For large orders, it uses CalculatePacksOptimized (hybrid greedy/DP approach).
-func OptimalCalculatePacks(itemsOrdered uint64, availablePackSizes []uint64) (PackResult, error) {
+func OptimalCalculatePacks(itemsOrdered int, availablePackSizes []int) (PackResult, error) {
 	// Threshold based on benchmark results
 	// Below this threshold, the original algorithm is faster and uses less memory
 	// Above this threshold, the optimized algorithm is dramatically better
 	// Tbh, this is a guess based on benchmarks
-	var threshold uint64 = 2500
+	var threshold int = 2500
 
 	// If we have many pack sizes, lower the threshold as DP becomes more expensive
 	if len(availablePackSizes) > 5 {
 		threshold = 1000
 	}
 
+	// Safety threshold to prevent memory issues with extremely large values
+	// This is a reasonable upper limit for the DP approach
+	var safetyThreshold int = 1000000
+
 	// Choose the appropriate algorithm based on order size
-	if itemsOrdered <= threshold {
+	if itemsOrdered <= threshold && itemsOrdered <= safetyThreshold {
 		return CalculatePacks(itemsOrdered, availablePackSizes)
 	} else {
 		return CalculatePacksOptimized(itemsOrdered, availablePackSizes)
@@ -47,13 +51,20 @@ func OptimalCalculatePacks(itemsOrdered uint64, availablePackSizes []uint64) (Pa
 // this implementation uses dynamic programming
 // uses slices to store the pack sizes and their counts
 // memory usage grows with order size
-func CalculatePacks(itemsOrdered uint64, availablePackSizes []uint64) (PackResult, error) {
+func CalculatePacks(itemsOrdered int, availablePackSizes []int) (PackResult, error) {
 	if itemsOrdered <= 0 {
 		return PackResult{}, fmt.Errorf("items ordered must be positive")
 	}
 
 	if len(availablePackSizes) == 0 {
 		return PackResult{}, fmt.Errorf("no pack sizes available")
+	}
+
+	// Safety check to prevent memory issues with extremely large values
+	// This is a reasonable upper limit for the DP approach
+	var safetyThreshold int = 1000000
+	if itemsOrdered > safetyThreshold {
+		return PackResult{}, fmt.Errorf("order size too large for this algorithm, use CalculatePacksOptimized instead")
 	}
 
 	// Sort pack sizes in descending order
@@ -82,7 +93,7 @@ func CalculatePacks(itemsOrdered uint64, availablePackSizes []uint64) (PackResul
 // Uses maps to store the pack sizes and their counts
 // This is a more memory efficient solution for large orders
 // Uses a hybrid approach with greedy algorithm for large portions and DP for smaller amounts
-func CalculatePacksOptimized(itemsOrdered uint64, availablePackSizes []uint64) (PackResult, error) {
+func CalculatePacksOptimized(itemsOrdered int, availablePackSizes []int) (PackResult, error) {
 	if itemsOrdered <= 0 {
 		return PackResult{}, fmt.Errorf("items ordered must be positive")
 	}
@@ -99,7 +110,7 @@ func CalculatePacksOptimized(itemsOrdered uint64, availablePackSizes []uint64) (
 	smallestPack := availablePackSizes[len(availablePackSizes)-1]
 
 	// First use greedy approach for the bulk of the order
-	packCounts := make(map[uint64]uint64)
+	packCounts := make(map[int]int)
 	remaining := itemsOrdered
 
 	// Limit the DP size to a reasonable value
@@ -120,15 +131,15 @@ func CalculatePacksOptimized(itemsOrdered uint64, availablePackSizes []uint64) (
 	// Use DP only for the remaining amount (which is smaller than dpLimit)
 	if remaining > 0 {
 		// DP table: dp[i] = minimum items to fulfill i items
-		dp := make([]uint64, dpLimit+1)
-		packChoice := make([]uint64, dpLimit+1)
-		for i := uint64(1); i <= dpLimit; i++ {
+		dp := make([]int, dpLimit+1)
+		packChoice := make([]int, dpLimit+1)
+		for i := int(1); i <= dpLimit; i++ {
 			dp[i] = i + dpLimit // Initialize with a large value
 		}
 		dp[0] = 0
 
 		// Fill the dp table
-		for i := uint64(1); i <= dpLimit; i++ {
+		for i := int(1); i <= dpLimit; i++ {
 			for _, size := range availablePackSizes {
 				if size <= i && dp[i-size]+size < dp[i] {
 					dp[i] = dp[i-size] + size
@@ -158,8 +169,8 @@ func CalculatePacksOptimized(itemsOrdered uint64, availablePackSizes []uint64) (
 	}
 
 	// Calculate total items and packs
-	var totalItems uint64 = 0
-	var totalPacks uint64 = 0
+	var totalItems int = 0
+	var totalPacks int = 0
 	for size, count := range packCounts {
 		totalItems += size * count
 		totalPacks += count
@@ -176,7 +187,7 @@ func CalculatePacksOptimized(itemsOrdered uint64, availablePackSizes []uint64) (
 // findMinimumItems uses logic where finds largest possible pack size
 // and then fills the remaining items with smaller packs
 // It returns the minimum number of items
-func findMinimumItems(target uint64, packSizes []uint64) (uint64, map[uint64]uint64) {
+func findMinimumItems(target int, packSizes []int) (int, map[int]int) {
 	smallestPack := packSizes[len(packSizes)-1]
 
 	// DP table: dp[i] = minimum number of items to fulfill i items
@@ -186,7 +197,7 @@ func findMinimumItems(target uint64, packSizes []uint64) (uint64, map[uint64]uin
 	// dp:       [0, maxPossible, maxPossible, ..., maxPossible] (length = target + 1)
 
 	maxPossible := target + smallestPack + 1
-	dp := make([]uint64, target+1)
+	dp := make([]int, target+1)
 	for i := range dp {
 		dp[i] = maxPossible
 	}
@@ -194,10 +205,10 @@ func findMinimumItems(target uint64, packSizes []uint64) (uint64, map[uint64]uin
 
 	// For each number of items, record which pack was used
 	// packUsed: [0, 0, 0, ..., 0] (length = target + 1)
-	packUsed := make([]uint64, target+1)
+	packUsed := make([]int, target+1)
 
 	// Fill the dp table
-	for i := uint64(1); i <= target; i++ { // Iterate through all possible item counts from 1 to the target
+	for i := int(1); i <= target; i++ { // Iterate through all possible item counts from 1 to the target
 		for _, size := range packSizes { // Iterate through each available pack size
 			// Check if the current pack size can be used to fulfill the current target (i)
 			// and if using this pack results in fewer items than the current best solution
@@ -214,7 +225,7 @@ func findMinimumItems(target uint64, packSizes []uint64) (uint64, map[uint64]uin
 	}
 
 	// Reconstruct the solution
-	packCounts := make(map[uint64]uint64)
+	packCounts := make(map[int]int)
 	current := target
 
 	// If we couldnt fulfill exactly, find the next possible fulfillment
@@ -252,7 +263,7 @@ func findMinimumItems(target uint64, packSizes []uint64) (uint64, map[uint64]uin
 	}
 
 	// Calculate total items
-	var totalItems uint64 = 0
+	var totalItems int = 0
 	for size, count := range packCounts {
 		totalItems += size * count
 	}

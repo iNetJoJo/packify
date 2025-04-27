@@ -1,7 +1,7 @@
 package calculator
 
 import (
-	"strconv"
+	"fmt"
 	"testing"
 )
 
@@ -14,7 +14,7 @@ var standardPackSizes = []int{250, 500, 1000, 2000, 5000}
 // BenchmarkCalculatePacks benchmarks the original CalculatePacks function
 func BenchmarkCalculatePacks(b *testing.B) {
 	for _, size := range benchmarkSizes {
-		b.Run("Size_"+strconv.Itoa(size), func(b *testing.B) {
+		b.Run(fmt.Sprintf("Size_%d", size), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				_, _ = CalculatePacks(size, standardPackSizes)
 			}
@@ -25,7 +25,7 @@ func BenchmarkCalculatePacks(b *testing.B) {
 // BenchmarkCalculatePacksOptimized benchmarks the optimized version
 func BenchmarkCalculatePacksOptimized(b *testing.B) {
 	for _, size := range benchmarkSizes {
-		b.Run("Size_"+strconv.Itoa(size), func(b *testing.B) {
+		b.Run(fmt.Sprintf("Size_%d", size), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				_, _ = CalculatePacksOptimized(size, standardPackSizes)
 			}
@@ -36,7 +36,7 @@ func BenchmarkCalculatePacksOptimized(b *testing.B) {
 // BenchmarkCalculatePacksMemory benchmarks memory usage of the original function
 func BenchmarkCalculatePacksMemory(b *testing.B) {
 	for _, size := range benchmarkSizes {
-		b.Run("Size_"+strconv.Itoa(size), func(b *testing.B) {
+		b.Run(fmt.Sprintf("Size_%d", size), func(b *testing.B) {
 			b.ReportAllocs()
 			for i := 0; i < b.N; i++ {
 				_, _ = CalculatePacks(size, standardPackSizes)
@@ -48,7 +48,7 @@ func BenchmarkCalculatePacksMemory(b *testing.B) {
 // BenchmarkCalculatePacksOptimizedMemory benchmarks memory usage of the optimized function
 func BenchmarkCalculatePacksOptimizedMemory(b *testing.B) {
 	for _, size := range benchmarkSizes {
-		b.Run("Size_"+strconv.Itoa(size), func(b *testing.B) {
+		b.Run(fmt.Sprintf("Size_%d", size), func(b *testing.B) {
 			b.ReportAllocs()
 			for i := 0; i < b.N; i++ {
 				_, _ = CalculatePacksOptimized(size, standardPackSizes)
@@ -59,8 +59,8 @@ func BenchmarkCalculatePacksOptimizedMemory(b *testing.B) {
 
 // BenchmarkCalculatePacksLarge benchmarks the original function with large inputs
 func BenchmarkCalculatePacksLarge(b *testing.B) {
-	largeSize := 100000
-	b.Run("Size_"+strconv.Itoa(largeSize), func(b *testing.B) {
+	var largeSize int = 100000
+	b.Run(fmt.Sprintf("Size_%d", largeSize), func(b *testing.B) {
 		b.ReportAllocs()
 		for i := 0; i < b.N; i++ {
 			_, _ = CalculatePacks(largeSize, standardPackSizes)
@@ -70,8 +70,8 @@ func BenchmarkCalculatePacksLarge(b *testing.B) {
 
 // BenchmarkCalculatePacksOptimizedLarge benchmarks the optimized function with large inputs
 func BenchmarkCalculatePacksOptimizedLarge(b *testing.B) {
-	largeSize := 100000
-	b.Run("Size_"+strconv.Itoa(largeSize), func(b *testing.B) {
+	var largeSize int = 100000
+	b.Run(fmt.Sprintf("Size_%d", largeSize), func(b *testing.B) {
 		b.ReportAllocs()
 		for i := 0; i < b.N; i++ {
 			_, _ = CalculatePacksOptimized(largeSize, standardPackSizes)
@@ -83,7 +83,7 @@ func BenchmarkCalculatePacksOptimizedLarge(b *testing.B) {
 func BenchmarkCalculatePacksCustom(b *testing.B) {
 	customPackSizes := []int{100, 200, 300, 400, 500, 600, 700, 800, 900, 1000}
 	for _, size := range []int{501, 5000, 10000} {
-		b.Run("Size_"+strconv.Itoa(size)+"_CustomPacks", func(b *testing.B) {
+		b.Run(fmt.Sprintf("Size_%d_CustomPacks", size), func(b *testing.B) {
 			b.ReportAllocs()
 			for i := 0; i < b.N; i++ {
 				_, _ = CalculatePacks(size, customPackSizes)
@@ -96,7 +96,7 @@ func BenchmarkCalculatePacksCustom(b *testing.B) {
 func BenchmarkCalculatePacksOptimizedCustom(b *testing.B) {
 	customPackSizes := []int{100, 200, 300, 400, 500, 600, 700, 800, 900, 1000}
 	for _, size := range []int{501, 5000, 10000} {
-		b.Run("Size_"+strconv.Itoa(size)+"_CustomPacks", func(b *testing.B) {
+		b.Run(fmt.Sprintf("Size_%d_CustomPacks", size), func(b *testing.B) {
 			b.ReportAllocs()
 			for i := 0; i < b.N; i++ {
 				_, _ = CalculatePacksOptimized(size, customPackSizes)

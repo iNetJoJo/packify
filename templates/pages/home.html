@@ -17,7 +17,7 @@
             <div class="form-group">
                 <label for="itemsOrdered">Items Ordered:</label>
                 <!-- I added here validation of max uint64 of golang, just to max the system out-->
-                <input type="number" id="itemsOrdered" name="itemsOrdered" min="1" max="18446744073709551615" required>
+                <input type="number" id="itemsOrdered" name="itemsOrdered" min="1" max="9223372036854775807" required>
             </div>
             <button type="submit" class="btn">Calculate Packs</button>
         </form>

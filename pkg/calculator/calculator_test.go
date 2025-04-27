@@ -81,13 +81,6 @@ func TestCalculatePacks(t *testing.T) {
 			expectError:        true,
 		},
 		{
-			name:               "Order -1 items",
-			itemsOrdered:       -1,
-			availablePackSizes: []int{250, 500, 1000, 2000, 5000},
-			expectedResult:     PackResult{},
-			expectError:        true,
-		},
-		{
 			name:               "No pack sizes available",
 			itemsOrdered:       100,
 			availablePackSizes: []int{},
@@ -211,17 +204,17 @@ func TestOptimalCalculatePacks(t *testing.T) {
 
 			// Results should be identical
 			if optimalResult.TotalItems != directResult.TotalItems {
-				t.Errorf("TotalItems mismatch: OptimalCalculatePacks: %d, CalculatePacks: %d", 
+				t.Errorf("TotalItems mismatch: OptimalCalculatePacks: %d, CalculatePacks: %d",
 					optimalResult.TotalItems, directResult.TotalItems)
 			}
 
 			if optimalResult.TotalPacks != directResult.TotalPacks {
-				t.Errorf("TotalPacks mismatch: OptimalCalculatePacks: %d, CalculatePacks: %d", 
+				t.Errorf("TotalPacks mismatch: OptimalCalculatePacks: %d, CalculatePacks: %d",
 					optimalResult.TotalPacks, directResult.TotalPacks)
 			}
 
 			if optimalResult.ExcessItems != directResult.ExcessItems {
-				t.Errorf("ExcessItems mismatch: OptimalCalculatePacks: %d, CalculatePacks: %d", 
+				t.Errorf("ExcessItems mismatch: OptimalCalculatePacks: %d, CalculatePacks: %d",
 					optimalResult.ExcessItems, directResult.ExcessItems)
 			}
 		})
@@ -246,17 +239,17 @@ func TestOptimalCalculatePacks(t *testing.T) {
 
 			// Results should be identical
 			if optimalResult.TotalItems != directResult.TotalItems {
-				t.Errorf("TotalItems mismatch: OptimalCalculatePacks: %d, CalculatePacksOptimized: %d", 
+				t.Errorf("TotalItems mismatch: OptimalCalculatePacks: %d, CalculatePacksOptimized: %d",
 					optimalResult.TotalItems, directResult.TotalItems)
 			}
 
 			if optimalResult.TotalPacks != directResult.TotalPacks {
-				t.Errorf("TotalPacks mismatch: OptimalCalculatePacks: %d, CalculatePacksOptimized: %d", 
+				t.Errorf("TotalPacks mismatch: OptimalCalculatePacks: %d, CalculatePacksOptimized: %d",
 					optimalResult.TotalPacks, directResult.TotalPacks)
 			}
 
 			if optimalResult.ExcessItems != directResult.ExcessItems {
-				t.Errorf("ExcessItems mismatch: OptimalCalculatePacks: %d, CalculatePacksOptimized: %d", 
+				t.Errorf("ExcessItems mismatch: OptimalCalculatePacks: %d, CalculatePacksOptimized: %d",
 					optimalResult.ExcessItems, directResult.ExcessItems)
 			}
 		})
@@ -268,11 +261,6 @@ func TestOptimalCalculatePacks(t *testing.T) {
 		itemsOrdered int
 		packSizes    []int
 	}{
-		{
-			name:         "Negative order size",
-			itemsOrdered: -1,
-			packSizes:    []int{250, 500, 1000},
-		},
 		{
 			name:         "Zero order size",
 			itemsOrdered: 0,

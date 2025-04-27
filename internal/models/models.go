@@ -7,7 +7,7 @@ import (
 // PackSize represents a pack size option
 type PackSize struct {
 	gorm.Model
-	Size uint64 `gorm:"not null;uniqueIndex:idx_size_deleted_at"`
+	Size int `gorm:"not null;uniqueIndex:idx_size_deleted_at"`
 }
 
 // SetupDatabase initializes the database with default pack sizes
@@ -43,13 +43,13 @@ func SetupDatabase(db *gorm.DB) error {
 }
 
 // GetPackSizes returns all available pack sizes in descending order
-func GetPackSizes(db *gorm.DB) ([]uint64, error) {
+func GetPackSizes(db *gorm.DB) ([]int, error) {
 	var packSizes []PackSize
 	if err := db.Order("size DESC").Find(&packSizes).Error; err != nil {
 		return nil, err
 	}
 
-	sizes := make([]uint64, len(packSizes))
+	sizes := make([]int, len(packSizes))
 	for i, pack := range packSizes {
 		sizes[i] = pack.Size
 	}

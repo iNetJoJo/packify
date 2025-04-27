@@ -20,7 +20,7 @@ func NewPackService(db *gorm.DB) *PackService {
 }
 
 // CalculatePacks calculates the optimal packs for an order
-func (s *PackService) CalculatePacks(itemsOrdered uint64) (*calculator.PackResult, error) {
+func (s *PackService) CalculatePacks(itemsOrdered int) (*calculator.PackResult, error) {
 	// Get available pack sizes from the database
 	packSizes, err := models.GetPackSizes(s.DB)
 	if err != nil {
@@ -46,7 +46,7 @@ func (s *PackService) GetPackSizes() ([]models.PackSize, error) {
 }
 
 // AddPackSize adds a new pack size
-func (s *PackService) AddPackSize(size uint64) error {
+func (s *PackService) AddPackSize(size int) error {
 	packSize := models.PackSize{
 		Size: size,
 	}

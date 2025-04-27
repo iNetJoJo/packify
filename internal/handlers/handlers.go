@@ -51,7 +51,7 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 		}
 
 		funcMap := template.FuncMap{
-			"multiply": func(a, b uint64) uint64 {
+			"multiply": func(a, b int) int {
 				return a * b
 			},
 		}
@@ -74,7 +74,7 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 func NewTemplateRenderer() (*TemplateRenderer, error) {
 	// Define template functions
 	funcMap := template.FuncMap{
-		"multiply": func(a, b uint64) uint64 {
+		"multiply": func(a, b int) int {
 			return a * b
 		},
 	}
@@ -134,10 +134,10 @@ func (h *Handler) RegisterRoutes(e *echo.Echo) {
 }
 
 type CalculateRequest struct {
-	// Handle potential overflow for max uint64 values. If the value exceeds the maximum, it will wrap around to zero.
+	// Handle potential overflow for max int values. If the value exceeds the maximum, it will wrap around to zero.
 	// Consider using big.Int for handling extremely large numbers if required in the future.
 	// Lets be real here, we are not going to have more than 2^64 items in a single order but then again, we are not here to judge.
-	ItemsOrdered uint64 `json:"itemsOrdered"`
+	ItemsOrdered int `json:"itemsOrdered"`
 }
 
 // CalculatePacks calculates the optimal packs for an order
@@ -179,14 +179,14 @@ func (h *Handler) CalculatePacks(c echo.Context) error {
 
 // PackInfo Format response
 type PackInfo struct {
-	Size  uint64 `json:"size"`
-	Count uint64 `json:"count"`
+	Size  int `json:"size"`
+	Count int `json:"count"`
 }
 type CalculateResponse struct {
 	Packs       []PackInfo `json:"packs"`
-	TotalPacks  uint64     `json:"totalPacks"`
-	TotalItems  uint64     `json:"totalItems"`
-	ExcessItems uint64     `json:"excessItems"`
+	TotalPacks  int        `json:"totalPacks"`
+	TotalItems  int        `json:"totalItems"`
+	ExcessItems int        `json:"excessItems"`
 }
 
 // GetPackSizes returns all pack sizes
@@ -199,7 +199,7 @@ func (h *Handler) GetPackSizes(c echo.Context) error {
 }
 
 type AddPackSizeRequest struct {
-	Size uint64 `form:"size" json:"size"`
+	Size int `form:"size" json:"size"`
 }
 
 // AddPackSize adds a new pack size
@@ -287,7 +287,7 @@ func (h *Handler) CalculatePage(c echo.Context) error {
 }
 
 type CalculatePagePostRequest struct {
-	ItemsOrdered uint64 `form:"itemsOrdered" json:"itemsOrdered"`
+	ItemsOrdered int `form:"itemsOrdered" json:"itemsOrdered"`
 }
 
 // CalculatePagePost handles the calculate form submission
