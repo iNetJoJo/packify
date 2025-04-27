@@ -25,13 +25,14 @@ flowchart TD
     - Initially all values set to maximum except `dp[0] = 0`
 
 2. **Fill DP Table**:
-   ```mermaid
-   flowchart LR
-     DP0[dp[0]=0] --> DP1[dp[1]] --> DP2[dp[2]] --> DP3[...] --> DPN[dp[n]]
-     PS1[Pack: 250] -.-> DP1
-     PS2[Pack: 500] -.-> DP2
-     PS3[Pack: 1000] -.-> DP3
-   ```
+
+```mermaid
+flowchart LR
+    DP0[dp[0]=0] --> DP1[dp[1]] --> DP2[dp[2]] --> DP3[...] --> DPN[dp[n]]
+    PS1[Pack: 250] -.-> DP1
+    PS2[Pack: 500] -.-> DP2
+    PS3[Pack: 1000] -.-> DP3
+```
 
 3. **Transition Logic**:
     - For each target `i` and each pack size `size`:
